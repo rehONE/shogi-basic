@@ -1,0 +1,117 @@
+/* =========================
+   Общие стили
+   ========================= */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f5;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* Контейнер приложения */
+#app {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   Кнопки основного меню
+   ========================= */
+button {
+    background-color: #4CAF50; /* основной зелёный */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    margin: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.2s, background-color 0.3s; /* анимация */
+}
+
+button:hover {
+    transform: scale(1.05); /* слегка увеличиваем */
+    background-color: #45a049; /* темнее при наведении */
+}
+
+button:disabled {
+    cursor: default;
+    opacity: 0.8;
+}
+
+/* =========================
+   Контент
+   ========================= */
+#content h2 {
+    color: #222;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Фигуры сёги */
+.piece {
+    background-color: #fafafa;
+    border-left: 5px solid #4CAF50;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+.piece img {
+    max-width: 150px;
+    display: block;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Списки */
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+/* =========================
+   Мини-тест
+   ========================= */
+.test-option {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    margin: 10px 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.2s, background-color 0.3s;
+    display: inline-block;
+    min-width: 150px;
+}
+
+.test-option:hover {
+    transform: scale(1.05);
+    background-color: #1976D2;
+}
+
+.test-option:disabled {
+    cursor: default;
+    opacity: 0.8;
+}
+
+/* Изображения в тесте */
+.test-image {
+    max-width: 200px;
+    display: block;
+    margin: 10px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
