@@ -31,12 +31,12 @@ button {
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    transition: transform 0.2s, background-color 0.3s; /* анимация */
+    transition: transform 0.2s, background-color 0.3s;
 }
 
 button:hover {
-    transform: scale(1.05); /* слегка увеличиваем */
-    background-color: #45a049; /* темнее при наведении */
+    transform: scale(1.05);
+    background-color: #45a049;
 }
 
 button:disabled {
@@ -60,6 +60,11 @@ button:disabled {
     padding: 15px 20px;
     margin-bottom: 15px;
     border-radius: 8px;
+    transition: transform 0.3s;
+}
+
+.piece:hover {
+    transform: translateY(-5px);
 }
 
 .piece img {
@@ -113,5 +118,36 @@ li {
     margin: 10px auto;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   Правила
+   ========================= */
+.rules {
+    background-color: #f9f9ff;
+    border-left: 5px solid #2196F3;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.rules:hover {
+    transform: translateY(-3px);
+    background-color: #f0f0ff;
+}
+
+.rules p, .rules li {
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.rules strong {
+    color: #1976D2;
+}
+
+.rules em {
+    color: #555;
 }
 
