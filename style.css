@@ -23,7 +23,7 @@ body {
    Кнопки основного меню
    ========================= */
 button {
-    background-color: #4CAF50; /* основной зелёный */
+    background-color: #4CAF50;
     color: white;
     border: none;
     padding: 12px 25px;
@@ -42,6 +42,28 @@ button:hover {
 button:disabled {
     cursor: default;
     opacity: 0.8;
+}
+
+/* =========================
+   АНИМАЦИЯ КОНТЕНТА
+   ========================= */
+#content {
+    animation: fadeIn 0.4s ease;
+}
+
+.fade {
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* =========================

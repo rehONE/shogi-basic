@@ -8,12 +8,17 @@
 <body>
     <div id="app">
         <h1 style="text-align:center;">Обучение сёги</h1>
+
+        <!-- Главное меню -->
         <div style="text-align:center; margin-bottom:20px;">
-            <button id="figuresBtn">Фигуры</button>
-            <button id="rulesBtn">Правила</button>
-            <button id="costBtn">Стоимость</button>
-            <button id="testBtn">Мини-тест</button>
+            <button onclick="showPieces()">Фигуры</button>
+            <button onclick="showRules()">Правила</button>
+            <button onclick="showCost()">Стоимость</button>
+            <button onclick="showTrainer()">Мини-тренажёр</button>
+            <button onclick="showTestMenu()">Тест</button>
         </div>
+
+        <!-- Контент -->
         <div id="content"></div>
     </div>
 

@@ -1,15 +1,21 @@
-// Данные фигур берём из data.js
-// shogiPieces уже определён в data.js
-
-// Находим элементы кнопок и блока контента
-const figuresBtn = document.getElementById("figuresBtn");
-const rulesBtn = document.getElementById("rulesBtn");
-const costBtn = document.getElementById("costBtn");
-const testBtn = document.getElementById("testBtn");
+// =====================================
+//  ФУНКЦИЯ ДЛЯ ПЛАВНОЙ СМЕНЫ КОНТЕНТА
+// =====================================
 const content = document.getElementById("content");
 
-// Функция для отображения всех фигур с изображениями
-function showFigures() {
+function setContent(html) {
+    content.classList.remove("fade");  // сброс анимации
+    void content.offsetWidth;          // трюк для перезапуска анимации
+    content.classList.add("fade");
+    content.innerHTML = html;
+}
+
+// =====================================
+//  ФУНКЦИИ ДЛЯ КНОПОК МЕНЮ
+// =====================================
+
+// Фигуры
+function showPieces() {
     let html = "<h2>Фигуры сёги</h2>";
     shogiPieces.forEach(piece => {
         html += `
@@ -17,17 +23,17 @@ function showFigures() {
                 <h3>${piece.name} (${piece.kanji})</h3>
                 <p><strong>Чтение:</strong> ${piece.reading}</p>
                 <p><strong>Ход:</strong> ${piece.move}</p>
-                <img src="${piece.image}" alt="${piece.name} ход">
+                <img src="${piece.image}" alt="${piece.name}">
                 <p><strong>Стоимость:</strong> ${piece.value}</p>
             </div>
         `;
     });
-    content.innerHTML = html;
+    setContent(html);
 }
 
-// Функция для отображения правил (обновлено)
+// Правила
 function showRules() {
-    content.innerHTML = `
+    setContent(`
         <div class="rules">
             <h2>Правила игры</h2>
             <ul>
@@ -36,131 +42,196 @@ function showRules() {
                 <li>Взятые фигуры можно возвращать на доску.</li>
                 <li>Пешка не может быть две в одном столбце.</li>
                 <li>Пешка не может сразу поставить мат при сбросе.</li>
-                <li>Фигуры могут превращаться при достижении последней трети доски (зона продвижения противника).</li>
+                <li>Фигуры могут превращаться при достижении зоны продвижения противника.</li>
                 <li>Превращение меняет ход фигуры на более сильный (например, пешка → золотой генерал).</li>
                 <li>Не все фигуры могут превращаться: король и золотой генерал не превращаются.</li>
                 <li>Игрок выбирает, превращать фигуру или нет при входе в зону продвижения.</li>
             </ul>
             <p><strong>Ценность фигур:</strong> Король > Ладья > Слон > Золотой генерал > Серебряный генерал > Конь > Копьё > Пешка.</p>
-            <p><em>Превращённые фигуры считаются сильнее, особенно токин (превращённая пешка).</em></p>
-            <p><strong>Фазы игры:</strong> Дебют → Миттельшпиль → Эндшпиль. В дебюте разворачиваем фигуры, в миттельшпиле принимаем решения и оцениваем позиции, в эндшпиле важна скорость атаки и защита короля.</p>
         </div>
-    `;
+    `);
 }
 
-
-// Функция для отображения стоимости фигур
+// Стоимость
 function showCost() {
     let html = "<h2>Стоимость фигур</h2><ul>";
     shogiPieces.forEach(piece => {
         html += `<li>${piece.name} (${piece.kanji}): ${piece.value}</li>`;
     });
     html += "</ul>";
-    content.innerHTML = html;
+    setContent(html);
 }
 
-// Мини-тест
-function showTest() {
-    const questions = [
-        {
-            question: "Какая фигура ходит как золотой генерал?",
-            options: ["Конь", "Золотой генерал", "Слон", "Пешка"],
-            answer: "Золотой генерал",
-            image: "images/gold_general_move.png"
-        },
-        {
-            question: "Как ходит конь?",
-            options: ["Прямо на 1 клетку", "По диагонали", "Буквой Г вперёд", "В любую сторону на 1 клетку"],
-            answer: "Буквой Г вперёд",
-            image: "images/knight_move.png"
-        },
-        {
-            question: "Какая фигура стоит 10 очков?",
-            options: ["Ладья", "Слон", "Пешка", "Золотой генерал"],
-            answer: "Ладья",
-            image: "images/rook_move.png"
-        },
-        {
-            question: "Можно ли поставить пешку в один столбец сразу после сброса?",
-            options: ["Да", "Нет"],
-            answer: "Нет",
-            image: "images/pawn_move.png"
-        },
-        {
-            question: "Какая фигура становится золотым генералом при превращении?",
-            options: ["Пешка", "Конь", "Слон", "Король"],
-            answer: "Пешка",
-            image: "images/pawn_move.png"
-        }
+// =====================================
+//  МИНИ-ТРЕНАЖЁР "УГАДАЙ ФИГУРУ"
+// =====================================
+function showTrainer() {
+    // Список фигур с изображениями
+    const pieces = [
+        { name: "Король", image: "images/king_move.png" },
+        { name: "Ладья", image: "images/rook_move.png" },
+        { name: "Слон", image: "images/bishop_move.png" },
+        { name: "Золотой генерал", image: "images/gold_general_move.png" },
+        { name: "Серебряный генерал", image: "images/silver_general_move.png" },
+        { name: "Конь", image: "images/knight_move.png" },
+        { name: "Копьё", image: "images/lance_move.png" },
+        { name: "Пешка", image: "images/pawn_move.png" }
     ];
 
-    shuffleArray(questions);
+    let correct;
 
+    function nextRound() {
+        // Случайная фигура
+        correct = pieces[Math.floor(Math.random() * pieces.length)];
+
+        // Создаём 4 варианта ответов
+        let options = shuffleArray([...pieces]).slice(0, 4);
+
+        // Обеспечиваем, чтобы правильная фигура была среди вариантов
+        if (!options.includes(correct)) options[0] = correct;
+        options = shuffleArray(options);
+
+        // HTML контент
+        let html = `
+            <h2 style="text-align:center;">🧩 Угадай фигуру</h2>
+            <img src="${correct.image}" class="test-image">
+            <div style="text-align:center; margin-top:15px;">
+        `;
+
+        options.forEach(p => {
+            html += `<button class="test-option">${p.name}</button>`;
+        });
+        html += `</div>`;
+
+        setContent(html);
+
+        // Обработчик нажатий
+        document.querySelectorAll(".test-option").forEach(btn => {
+            btn.onclick = () => {
+                if (btn.textContent === correct.name) {
+                    btn.style.backgroundColor = "#4CAF50"; // зелёная подсветка
+                } else {
+                    btn.style.backgroundColor = "#f44336"; // красная подсветка
+                }
+
+                // Показываем правильный ответ и блокируем кнопки
+                document.querySelectorAll(".test-option").forEach(b => {
+                    b.disabled = true;
+                    if (b.textContent === correct.name) b.style.backgroundColor = "#4CAF50";
+                });
+
+                // Переход к следующему раунду через 1.2 секунды
+                setTimeout(nextRound, 1200);
+            };
+        });
+    }
+
+    nextRound();
+}
+
+// =====================================
+//  ТЕСТ С ВЫБОРОМ СЛОЖНОСТИ
+// =====================================
+function showTestMenu() {
+    setContent(`
+        <h2 style="text-align:center;">📝 Выбор сложности</h2>
+        <div style="text-align:center;">
+            <button onclick="startTest('easy')" class="test-option">Лёгкий</button>
+            <button onclick="startTest('medium')" class="test-option">Средний</button>
+            <button onclick="startTest('hard')" class="test-option">Сложный</button>
+        </div>
+    `);
+}
+
+function startTest(level) {
+const allQuestions = {
+    easy: [
+        { q: "Какая фигура ходит на 1 клетку вперёд?", options: ["Пешка", "Конь", "Слон"], a: "Пешка", img: "images/pawn_move.png" },
+        { q: "Какая фигура ходит по диагонали на любое количество клеток?", options: ["Ладья", "Слон", "Золотой генерал"], a: "Слон", img: "images/bishop_move.png" },
+        { q: "Какая фигура самая ценная?", options: ["Король", "Пешка", "Конь"], a: "Король", img: "images/king_move.png" },
+        { q: "Какая фигура ходит буквой Г вперёд?", options: ["Конь", "Слон", "Ладья"], a: "Конь", img: "images/knight_move.png" },
+        { q: "Какая фигура превращается в токин?", options: ["Пешка", "Конь", "Слон"], a: "Пешка", img: "images/pawn_move.png" }
+    ],
+    medium: [
+        { q: "Сколько пешек можно ставить в один столбец?", options: ["1", "2", "Неограниченно"], a: "1" },
+        { q: "Можно ли сразу поставить мат пешкой при сбросе?", options: ["Да", "Нет"], a: "Нет" },
+        { q: "Какие фигуры не могут превращаться?", options: ["Король и золотой генерал", "Слон и ладья", "Пешка и Конь"], a: "Король и золотой генерал" },
+        { q: "Какая фигура имеет стоимость 10 очков?", options: ["Ладья", "Слон", "Золотой генерал"], a: "Ладья" },
+        { q: "Какая фигура может двигаться по диагонали и вертикали только вперёд?", options: ["Серебряный генерал", "Золотой генерал", "Конь"], a: "Серебряный генерал" },
+        { q: "Что происходит при превращении пешки в токин?", options: ["Увеличивается сила и ход", "Становится королём", "Становится ладьёй"], a: "Увеличивается сила и ход" },
+        { q: "Какой порядок игры?", options: ["Дебют → Миттельшпиль → Эндшпиль", "Эндшпиль → Дебют → Миттельшпиль", "Миттельшпиль → Дебют → Эндшпиль"], a: "Дебют → Миттельшпиль → Эндшпиль" },
+        { q: "Какой генерал нельзя превратить?", options: ["Золотой", "Серебряный", "Конь"], a: "Золотой" },
+        { q: "Сколько зон продвижения у каждой стороны?", options: ["3 ряда", "4 ряда", "2 ряда"], a: "3 ряда" },
+        { q: "Можно ли возвращать взятые фигуры на доску?", options: ["Да", "Нет"], a: "Да" }
+    ],
+    hard: [
+        { q: "Сколько очков вместе дают: Пешка + Ладья + Золотой генерал?", options: ["17", "16", "15"], a: "17" },
+        { q: "Можно ли поставить две пешки в один столбец?", options: ["Да", "Нет"], a: "Нет" },
+        { q: "Король может превращаться?", options: ["Да", "Нет"], a: "Нет" },
+        { q: "Если пешка превращается, во что она становится?", options: ["Токин", "Золотой генерал", "Слон"], a: "Токин" },
+        { q: "Сколько очков вместе дают: Конь + Серебряный генерал + Пешка?", options: ["10", "9", "8"], a: "10" },
+        { q: "Какая фигура блокирует целый ряд, если поставить её в эндшпиле?", options: ["Ладья", "Слон", "Золотой генерал"], a: "Ладья" },
+        { q: "Можно ли сразу поставить мат пешкой после сброса?", options: ["Да", "Нет"], a: "Нет" },
+        { q: "Сколько фаз в игре и как они называются?", options: ["3: Дебют → Миттельшпиль → Эндшпиль", "2: Дебют → Эндшпиль", "4: Дебют → Миттельшпиль → Эндшпиль → Финал"], a: "3: Дебют → Миттельшпиль → Эндшпиль" },
+        { q: "Какая фигура ходит буквой Г вперёд?", options: ["Конь", "Слон", "Ладья"], a: "Конь" },
+        { q: "Можно ли использовать взятые фигуры для атаки?", options: ["Да", "Нет"], a: "Да" }
+    ]
+};
+
+    let countQuestions = { easy: 5, medium: 10, hard: 15 };
+    let questions = shuffleArray([...allQuestions[level]]).slice(0, countQuestions[level]);
     let currentQuestion = 0;
     let score = 0;
 
-    function showNextQuestion() {
+    function nextQuestion() {
         if (currentQuestion >= questions.length) {
-            content.innerHTML = `
+            setContent(`
                 <h2>Тест завершён!</h2>
-                <p style="text-align:center; font-size:18px;">Ваш результат: <strong>${score} из ${questions.length}</strong></p>
-            `;
+                <p style="text-align:center;">Ваш результат: <strong>${score} из ${questions.length}</strong></p>
+                <div style="text-align:center; margin-top:15px;">
+                    <button onclick="showTestMenu()" class="test-option">Выбрать сложность снова</button>
+                </div>
+            `);
             return;
         }
 
         const q = questions[currentQuestion];
-        const options = [...q.options];
-        shuffleArray(options);
+        let html = `<h2 style="text-align:center;">Вопрос ${currentQuestion + 1}</h2>`;
+        html += `<p style="text-align:center; font-size:18px;">${q.q}</p>`;
+        if (level === "easy" && q.img) html += `<img src="${q.img}" class="test-image">`;
 
-        let html = `<h2 style="text-align:center;">Мини-тест</h2>`;
-        html += `<p style="text-align:center; font-size:18px;"><strong>Вопрос ${currentQuestion + 1}:</strong> ${q.question}</p>`;
-        if (q.image) {
-            html += `<img src="${q.image}" alt="Ход фигуры" class="test-image">`;
-        }
-        html += `<div style="text-align:center;">`;
-        options.forEach(option => {
+        html += `<div style="text-align:center; margin-top:10px;">`;
+        shuffleArray(q.options).forEach(option => {
             html += `<button class="test-option">${option}</button>`;
         });
         html += `</div>`;
-        content.innerHTML = html;
 
-        const buttons = document.querySelectorAll(".test-option");
-        buttons.forEach(btn => {
-            btn.addEventListener("click", () => {
-                if (btn.textContent === q.answer) {
-                    score++;
-                    btn.style.backgroundColor = "#4CAF50";
-                } else {
-                    btn.style.backgroundColor = "#f44336";
-                }
-                buttons.forEach(b => {
-                    if (b.textContent === q.answer) b.style.backgroundColor = "#4CAF50";
+        setContent(html);
+
+        document.querySelectorAll(".test-option").forEach(btn => {
+            btn.onclick = () => {
+                if (btn.textContent === q.a) score++;
+                document.querySelectorAll(".test-option").forEach(b => {
                     b.disabled = true;
+                    if (b.textContent === q.a) b.style.backgroundColor = "#4CAF50";
+                    else if (btn.textContent === b.textContent) b.style.backgroundColor = "#f44336";
                 });
-                setTimeout(() => {
-                    currentQuestion++;
-                    showNextQuestion();
-                }, 1500);
-            });
+                setTimeout(() => { currentQuestion++; nextQuestion(); }, 1200);
+            };
         });
     }
 
-    showNextQuestion();
+    nextQuestion();
 }
 
-// Перемешивание массива
+
+// =====================================
+//  ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// =====================================
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
 }
-
-// Навешиваем обработчики на кнопки
-figuresBtn.addEventListener("click", showFigures);
-rulesBtn.addEventListener("click", showRules);
-costBtn.addEventListener("click", showCost);
-testBtn.addEventListener("click", showTest);
-
-
-
