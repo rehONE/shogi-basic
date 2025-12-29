@@ -67,7 +67,7 @@ button:disabled {
 }
 
 /* =========================
-   Контент
+   Заголовки контента
    ========================= */
 #content h2 {
     color: #222;
@@ -75,29 +75,34 @@ button:disabled {
     margin-bottom: 20px;
 }
 
-/* Фигуры сёги */
+/* =========================
+   Блоки фигур и крепостей
+   ========================= */
 .piece {
     background-color: #fafafa;
     border-left: 5px solid #4CAF50;
     padding: 15px 20px;
     margin-bottom: 15px;
     border-radius: 8px;
-    transition: transform 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .piece:hover {
     transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
 }
 
 .piece img {
     max-width: 150px;
     display: block;
-    margin: 10px 0;
+    margin: 10px auto;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* Списки */
+/* =========================
+   Списки
+   ========================= */
 ul {
     padding-left: 20px;
 }
@@ -171,5 +176,30 @@ li {
 
 .rules em {
     color: #555;
+}
+
+/* =========================
+   Кнопки выбора теста
+   ========================= */
+.test-level-btn {
+    background-color: #FF9800;
+}
+
+.test-level-btn:hover {
+    background-color: #F57C00;
+}
+
+/* =========================
+   Адаптивность
+   ========================= */
+@media (max-width: 600px) {
+    .piece img, .test-image {
+        max-width: 100%;
+    }
+
+    button, .test-option {
+        width: 100%;
+        margin: 8px 0;
+    }
 }
 
