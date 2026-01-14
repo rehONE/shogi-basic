@@ -3,28 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Обучение сёги</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="app">
-        <h1 style="text-align:center;">Обучение сёги</h1>
 
-        <!-- Главное меню -->
-        <div style="text-align:center; margin-bottom:20px;">
-            <button onclick="showPieces()">Фигуры</button>
-            <button onclick="showCastles()">Крепости</button>
-            <button onclick="showRules()">Правила</button>
-            <button onclick="showCost()">Стоимость</button>
-            <button onclick="showTrainer()">Мини-тренажёр</button>
-            <button onclick="showTestMenu()">Тест</button>
-        </div>
+<div id="app">
+    <header class="app-header">
+        <h1>Обучение сёги</h1>
+        <p class="subtitle">Базовые правила, фигуры и тренировка</p>
+    </header>
 
-        <!-- Контент -->
-        <div id="content"></div>
-    </div>
+    <nav class="menu">
+        <button data-action="pieces">Фигуры</button>
+        <button data-action="castles">Крепости</button>
+        <button data-action="rules">Правила</button>
+        <button data-action="cost">Стоимость</button>
+        <button data-action="trainer">Тренажёр</button>
+        <button data-action="test">Тест</button>
+        <!-- НОВАЯ КНОПКА -->
+        <button id="play-shogi">Играть</button>
+    </nav>
 
-    <!-- Подключение данных и логики -->
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <main id="content"></main>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+
+<script>
+    // Слушатель кнопки Играть
+    document.getElementById('play-shogi').addEventListener('click', () => {
+        window.open('https://rehone.github.io/shogi-board/', '_blank');
+    });
+</script>
+
 </body>
 </html>
