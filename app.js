@@ -1,176 +1,160 @@
 const content = document.getElementById("content");
+let trainingQueue = [...shogiPieces];
 
-/* ===== Плавная смена контента ===== */
 function setContent(html) {
+    // Удаляем класс, чтобы "сбросить" анимацию
     content.classList.remove("fade");
-    void content.offsetWidth;
+    // Маленький трюк для принудительного обновления DOM
+    void content.offsetWidth; 
+    // Добавляем класс снова
     content.classList.add("fade");
     content.innerHTML = html;
 }
 
-/* ===== Меню ===== */
 document.querySelector(".menu").addEventListener("click", e => {
-    if (!e.target.dataset.action) return;
-
     const action = e.target.dataset.action;
+    if (!action) return;
 
     switch (action) {
         case "pieces": showPieces(); break;
         case "castles": showCastles(); break;
         case "rules": showRules(); break;
         case "cost": showCost(); break;
-        case "trainer": showTrainer(); break;
+        case "trainer": 
+            trainingQueue = [...shogiPieces]; 
+            showTrainer(); 
+            break;
         case "test": showTestMenu(); break;
     }
 });
 
-/* ===== Фигуры ===== */
-function showPieces() {
-    let html = "<h2>Фигуры сёги</h2>";
-    shogiPieces.forEach(p => {
-        html += `
-        <div class="card">
-            <h3>${p.name} (${p.kanji})</h3>
-            <p><strong>Чтение:</strong> ${p.reading}</p>
-            <p><strong>Ход:</strong> ${p.move}</p>
-            <img src="${p.image}">
-            <p><strong>Стоимость:</strong> ${p.value}</p>
-        </div>`;
-    });
-    setContent(html);
-}
-
-/* ===== Крепости ===== */
-function showCastles() {
-    let html = "<h2>Крепости</h2>";
-    shogiCastles.forEach(c => {
-        html += `
-        <div class="card">
-            <h3>${c.name}</h3>
-            <p>${c.description}</p>
-            <img src="${c.image}">
-        </div>`;
-    });
-    setContent(html);
-}
-
-/* ===== Правила ===== */
 function showRules() {
     setContent(`
-    <div class="rules">
-        <h2>Правила игры</h2>
-        <ul>
-            <li>Взятые фигуры можно сбрасывать обратно на доску.</li>
-            <li>Цель игры — поставить мат королю.</li>
-            <li>Фигуры могут превращаться при входе в зону противника.</li>
-            <li>Материал и крепость решают исход партии.</li>
-        </ul>
-    </div>`);
-}
-
-/* ===== Стоимость ===== */
-function showCost() {
-    let html = "<h2>Стоимость фигур</h2><ul>";
-    shogiPieces.forEach(p => html += `<li>${p.name}: ${p.value}</li>`);
-    html += "</ul>";
-    setContent(html);
-}
-
-/* ===== Тренажёр ===== */
-function showTrainer() {
-    const pieces = [...shogiPieces];
-    let correctPiece;
-
-    function nextRound() {
-        correctPiece = pieces[Math.floor(Math.random() * pieces.length)];
-        let options = shuffleArray([...pieces]).slice(0, 4);
-        if (!options.includes(correctPiece)) options[0] = correctPiece;
-        options = shuffleArray(options);
-
-        let html = `<h2 style="text-align:center;">🧩 Угадай фигуру</h2>`;
-        html += `<img src="${correctPiece.image}" class="test-image">`;
-        html += `<div class="menu" style="justify-content:center;">`;
-        options.forEach(p => html += `<button class="test-option">${p.name}</button>`);
-        html += `</div>`;
-        setContent(html);
-
-        document.querySelectorAll(".test-option").forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll(".test-option").forEach(b => {
-                    b.disabled = true;
-                    if (b.textContent === correctPiece.name) b.classList.add("correct");
-                    else if (b.textContent === btn.textContent) b.classList.add("wrong");
-                });
-                setTimeout(nextRound, 1200);
-            };
-        });
-    }
-
-    nextRound();
-}
-
-/* ===== Тест ===== */
-function showTestMenu() {
-    setContent(`
-        <h2 style="text-align:center;">📝 Выбор сложности</h2>
-        <div class="menu" style="justify-content:center;">
-            <button class="test-option" data-level="Легкий">Лёгкий</button>
-            <button class="test-option" data-level="Средний">Средний</button>
-            <button class="test-option" data-level="Сложный">Сложный</button>
+        <h2 style="text-align:center;">Основы Сёги</h2>
+        <div class="rules-grid">
+            <div class="rule-item">
+                <h4>Король и мат</h4>
+                <p>Ваша цель — поймать вражеского короля. Если королю некуда бежать — это победа.</p>
+            </div>
+            <div class="rule-item">
+                <h4>Сброс фигур</h4>
+                <p>Фигуры, которые вы съели, можно поставить обратно на доску за вас. Это ваш ход.</p>
+            </div>
+            <div class="rule-item">
+                <h4>Превращение</h4>
+                <p>Дойдя до территории врага, фигура переворачивается и становится намного сильнее.</p>
+            </div>
+            <div class="rule-item">
+                <h4>Две пешки</h4>
+                <p>Главный запрет: нельзя ставить две свои пешки на одну вертикальную линию.</p>
+            </div>
         </div>
     `);
-
-    document.querySelectorAll(".test-option").forEach(btn => {
-        btn.onclick = () => startTest(btn.dataset.level);
-    });
 }
 
-function startTest(level) {
-    let questions = shuffleArray(shogiQuestions.filter(q => q.level===level)).slice(0,10);
-    let current = 0, score = 0;
-
-    function nextQ() {
-        if(current >= questions.length){
-            setContent(`<h2 style="text-align:center;">Тест завершён!</h2>
-            <p style="text-align:center;">Результат: <strong>${score} / ${questions.length}</strong></p>
-            <div class="menu" style="justify-content:center;"><button data-action="test">Выбрать снова</button></div>`);
-            document.querySelector('button[data-action="test"]').onclick = showTestMenu;
+function showTrainer() {
+    function nextRound() {
+        if (trainingQueue.length === 0) {
+            setContent(`
+                <div class="card" style="text-align:center;">
+                    <h2>🏆 Тренировка окончена!</h2>
+                    <p>Ты отлично запомнил все фигуры.</p>
+                    <button onclick="trainingQueue = [...shogiPieces]; showTrainer();">Начать сначала</button>
+                </div>
+            `);
             return;
         }
 
-        const q = questions[current];
-        let html = `<h2 style="text-align:center;">Вопрос ${current+1}</h2>`;
-        html += `<p style="text-align:center;">${q.question}</p>`;
-        if(level==="Легкий" && q.image) html += `<img src="${q.image}" class="test-image">`;
+        const idx = Math.floor(Math.random() * trainingQueue.length);
+        const correct = trainingQueue[idx];
+        let opts = shuffleArray([...shogiPieces]).slice(0, 4);
+        if (!opts.find(o => o.name === correct.name)) opts[0] = correct;
+        opts = shuffleArray(opts);
 
-        html += `<div class="menu" style="justify-content:center;">`;
-        shuffleArray(q.options).forEach(opt => html += `<button class="test-option">${opt}</button>`);
-        html += `</div>`;
+        setContent(`
+            <h2 style="text-align:center;">Угадай фигуру</h2>
+            <p style="text-align:center; opacity:0.6;">Осталось: ${trainingQueue.length}</p>
+            <img src="${correct.image}" class="test-image">
+            <div class="menu">
+                ${opts.map(o => `<button class="test-option" data-n="${o.name}">${o.name}</button>`).join('')}
+            </div>
+        `);
 
-        setContent(html);
-
-        document.querySelectorAll(".test-option").forEach(btn => {
-            btn.onclick = () => {
-                if(btn.textContent===q.answer) score++;
-                document.querySelectorAll(".test-option").forEach(b=>{
-                    b.disabled=true;
-                    if(b.textContent===q.answer) b.classList.add("correct");
-                    else if(b.textContent===btn.textContent) b.classList.add("wrong");
-                });
-                setTimeout(()=>{current++; nextQ();},1200);
+        document.querySelectorAll(".test-option").forEach(b => {
+            b.onclick = () => {
+                const isWin = b.dataset.n === correct.name;
+                document.querySelectorAll(".test-option").forEach(btn => btn.disabled = true);
+                
+                if (isWin) {
+                    b.style.background = "var(--green-main)";
+                    b.style.boxShadow = "0 0 15px var(--green-main)";
+                    trainingQueue.splice(idx, 1);
+                } else {
+                    b.style.background = "var(--red-main)";
+                    trainingQueue.push(correct);
+                }
+                setTimeout(nextRound, 1000);
             };
         });
     }
-
-    nextQ();
+    nextRound();
 }
 
-/* ===== Вспомогательные ===== */
-function shuffleArray(arr){
-    for(let i=arr.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [arr[i],arr[j]]=[arr[j],arr[i]];
+function showPieces() {
+    let html = "<h2>Фигуры</h2>";
+    shogiPieces.forEach(p => {
+        html += `<div class="card"><h3>${p.name}</h3><p>${p.move}</p><img src="${p.image}" class="test-image"></div>`;
+    });
+    setContent(html);
+}
+
+function showCastles() {
+    let html = "<h2>Крепости</h2>";
+    shogiCastles.forEach(c => {
+        html += `<div class="card"><h3>${c.name}</h3><p>${c.description}</p><img src="${c.image}" class="test-image" style="max-width:100%"></div>`;
+    });
+    setContent(html);
+}
+
+function showCost() {
+    setContent(`<div class="card"><h2>Сила фигур</h2><ul>${shogiPieces.map(p=>`<li><strong>${p.name}:</strong> ${p.value}</li>`).join('')}</ul></div>`);
+}
+
+function showTestMenu() {
+    setContent(`
+        <h2 style="text-align:center;">Начать тест</h2>
+        <div class="menu">
+            <button onclick="startTest('Легкий')">Лёгкий</button>
+            <button onclick="startTest('Средний')">Средний</button>
+            <button onclick="startTest('Сложный')">Сложный</button>
+        </div>
+    `);
+}
+
+function startTest(level) {
+    let qs = shuffleArray(shogiQuestions.filter(q => q.level === level)).slice(0, 10);
+    let cur = 0, score = 0;
+    function next() {
+        if (cur >= qs.length) {
+            setContent(`<div class="card" style="text-align:center;"><h2>Результат: ${score}/10</h2><button onclick="showTestMenu()">Назад</button></div>`);
+            return;
+        }
+        const q = qs[cur];
+        const prg = (cur / qs.length) * 100;
+        setContent(`
+            <div class="progress-bar"><div class="progress-bar-inner" style="width:${prg}%"></div></div>
+            <p style="text-align:center; font-weight:bold;">${q.question}</p>
+            ${q.image ? `<img src="${q.image}" class="test-image">` : ''}
+            <div class="menu">
+                ${shuffleArray([...q.options]).map(o => `<button class="test-option" onclick="processTest('${o}','${q.answer}')">${o}</button>`).join('')}
+            </div>
+        `);
     }
-    return arr;
+    window.processTest = (user, correct) => {
+        if(user === correct) score++;
+        cur++; next();
+    };
+    next();
 }
 
+function shuffleArray(a) { return a.sort(() => Math.random() - 0.5); }

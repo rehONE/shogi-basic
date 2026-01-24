@@ -2,41 +2,42 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Обучение сёги</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обучение Сёги</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div id="app">
+    <div class="theme-wrapper">
+        <button id="theme-toggle">🌙 Тема</button>
+    </div>
     <header class="app-header">
-        <h1>Обучение сёги</h1>
-        <p class="subtitle">Базовые правила, фигуры и тренировка</p>
+        <h1>Обучение Сёги</h1>
+        <p class="subtitle">Принципы стратегии и практика</p>
     </header>
-
     <nav class="menu">
         <button data-action="pieces">Фигуры</button>
         <button data-action="castles">Крепости</button>
-        <button data-action="rules">Правила</button>
+        <button data-action="rules">Принципы</button>
         <button data-action="cost">Стоимость</button>
         <button data-action="trainer">Тренажёр</button>
         <button data-action="test">Тест</button>
-        <!-- НОВАЯ КНОПКА -->
         <button id="play-shogi">Играть</button>
     </nav>
-
     <main id="content"></main>
 </div>
-
 <script src="data.js"></script>
 <script src="app.js"></script>
-
 <script>
-    // Слушатель кнопки Играть
-    document.getElementById('play-shogi').addEventListener('click', () => {
-        window.open('https://rehone.github.io/shogi-board/', '_blank');
-    });
+    document.getElementById('play-shogi').onclick = () => window.open('https://rehone.github.io/shogi-board/', '_blank');
+    const btn = document.getElementById('theme-toggle');
+    if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark-mode');
+    btn.onclick = () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        btn.textContent = isDark ? "☀️ Свет" : "🌙 Тема";
+    };
 </script>
-
 </body>
 </html>

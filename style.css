@@ -1,24 +1,23 @@
 :root {
     --green-main: #4CAF50;
     --green-dark: #43a047;
-    --green-soft: #e8f5e9;
-
     --blue-main: #2196F3;
     --red-main: #f44336;
-
     --bg-main: #f3f4f7;
     --white: #ffffff;
     --text-main: #333;
-
-    --radius-sm: 8px;
+    --card-bg: #ffffff;
     --radius-md: 14px;
     --radius-lg: 18px;
-
-    --shadow-soft: 0 6px 18px rgba(0,0,0,0.12);
+    --shadow-soft: 0 6px 18px rgba(0,0,0,0.08);
 }
 
-* {
-    box-sizing: border-box;
+body.dark-mode {
+    --bg-main: #1a1c1e;
+    --white: #242629;
+    --card-bg: #2d3035;
+    --text-main: #e1e2e5;
+    --shadow-soft: 0 8px 24px rgba(0,0,0,0.2);
 }
 
 body {
@@ -26,11 +25,12 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: var(--bg-main);
     color: var(--text-main);
+    line-height: 1.5;
+    transition: background 0.3s ease;
 }
 
-/* Контейнер */
 #app {
-    max-width: 960px;
+    max-width: 900px;
     margin: 24px auto;
     padding: 20px;
     background: var(--white);
@@ -38,32 +38,9 @@ body {
     box-shadow: var(--shadow-soft);
 }
 
-/* Header */
-.app-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
+.menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 25px; }
 
-.app-header h1 {
-    margin: 0;
-    font-size: 28px;
-}
-
-.subtitle {
-    color: #666;
-    margin-top: 6px;
-}
-
-/* Меню */
-.menu {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 25px;
-}
-
-/* Кнопки */
+/* Кнопки с анимацией и свечением */
 button {
     background: var(--green-main);
     color: #fff;
@@ -71,24 +48,38 @@ button {
     padding: 12px 22px;
     border-radius: var(--radius-md);
     font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
-    transition: transform .15s ease, box-shadow .15s ease, background .2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
 button:hover {
     background: var(--green-dark);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    /* То самое легкое зеленое свечение */
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35);
+}
+
+button:active {
+    transform: translateY(-1px);
+}
+
+.card {
+    background: var(--card-bg);
+    border-left: 5px solid var(--green-main);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 18px;
     box-shadow: var(--shadow-soft);
+    transition: transform 0.2s ease;
 }
 
-button:disabled {
-    opacity: 0.8;
-    cursor: default;
-}
+.card:hover { transform: scale(1.01); }
 
-/* Анимация */
+/* Анимация появления контента */
 .fade {
-    animation: fadeIn .35s ease;
+    animation: fadeIn 0.4s ease-out forwards;
 }
 
 @keyframes fadeIn {
@@ -96,83 +87,18 @@ button:disabled {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Карточки */
-.card {
-    background: var(--white);
-    border-left: 5px solid var(--green-main);
-    border-radius: var(--radius-md);
-    padding: 16px 20px;
-    margin-bottom: 18px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    transition: transform .2s ease;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-}
-
-.card img {
-    max-width: 180px;
-    display: block;
-    margin: 12px auto;
-    border-radius: var(--radius-sm);
-}
-
-/* Тест / тренажёр */
-.test-option {
-    background: var(--blue-main);
-    margin: 8px;
-    min-width: 140px;
-}
-
-.test-option.correct {
-    background: var(--green-main);
-}
-
-.test-option.wrong {
-    background: var(--red-main);
-}
-
-.test-image {
-    max-width: 220px;
-    margin: 12px auto;
-    display: block;
-    border-radius: var(--radius-md);
-}
-
-/* Правила */
-.rules {
-    background: #f9faff;
-    border-left: 5px solid var(--blue-main);
-    padding: 20px;
-    border-radius: var(--radius-md);
-}
-
-.rules li {
-    margin-bottom: 8px;
-    line-height: 1.6;
-}
-
-/* Прогрессбар для теста */
-.progress-bar {
-    width: 100%;
-    background: #ddd;
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    margin: 10px 0 20px 0;
-}
-
-.progress-bar-inner {
-    height: 14px;
-    width: 0%;
-    background: var(--green-main);
-    transition: width 0.3s ease;
-}
-
-/* Адаптив */
+/* Адаптив для телефонов */
 @media (max-width: 600px) {
-    button {
-        width: 100%;
+    #app { margin: 0; border-radius: 0; padding: 15px; }
+    button { 
+        flex: 1 1 43%; 
+        padding: 16px 10px;
     }
 }
 
+/* Остальные стили (прогресс-бар и т.д.) */
+.progress-bar { width: 100%; background: #ddd; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+.progress-bar-inner { height: 100%; background: var(--green-main); transition: width 0.3s ease; }
+.test-image { width: 100%; max-width: 200px; display: block; margin: 20px auto; border-radius: 10px; }
+.rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
+.rule-item { background: rgba(33, 150, 243, 0.1); padding: 15px; border-radius: 12px; border: 1px solid var(--blue-main); }
