@@ -28,7 +28,7 @@ body {
     background-color: var(--bg-main);
     color: var(--text-main);
     min-height: 100vh;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #app {
@@ -41,9 +41,31 @@ body {
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
+    transition: all 0.3s ease;
 }
 
-.menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 25px; }
+.app-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.app-subtitle {
+    opacity: 0.7;
+    margin: 5px 0;
+}
+
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
 
 button {
     background: var(--green-main);
@@ -55,6 +77,7 @@ button {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    user-select: none;
 }
 
 button:hover {
@@ -62,7 +85,15 @@ button:hover {
     box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
 }
 
-button:active { transform: scale(0.95); }
+button:active {
+    transform: scale(0.95);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
 
 .card {
     background: rgba(120, 120, 120, 0.05);
@@ -70,16 +101,74 @@ button:active { transform: scale(0.95); }
     border-radius: var(--radius-md);
     padding: 20px;
     margin-bottom: 15px;
+    transition: all 0.3s ease;
 }
 
-.theme-wrapper { display: flex; justify-content: flex-end; margin-bottom: 10px; }
+.card h2,
+.card h3 {
+    margin-top: 0;
+}
 
-.test-image { width: 100%; max-width: 200px; display: block; margin: 20px auto; border-radius: 12px; }
+.theme-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
 
-.progress-bar { width: 100%; background: rgba(0,0,0,0.1); height: 8px; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
-.progress-bar-inner { height: 100%; background: var(--green-main); transition: width 0.3s ease; }
+.test-image {
+    width: 100%;
+    max-width: 200px;
+    display: block;
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    height: 8px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.progress-bar-inner {
+    height: 100%;
+    background: var(--green-main);
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
 
 @media (max-width: 600px) {
-    #app { margin: 0; border-radius: 0; padding: 15px; min-height: 100vh; }
-    button { flex: 1 1 43%; }
+    #app {
+        margin: 0;
+        border-radius: 0;
+        padding: 15px;
+        min-height: 100vh;
+    }
+    
+    button {
+        flex: 1 1 43%;
+        min-width: 120px;
+    }
+    
+    .app-header h1 {
+        font-size: 1.5em;
+    }
+}
+
+#content {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
