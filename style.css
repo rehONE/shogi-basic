@@ -2,6 +2,7 @@
     --green-main: #4CAF50;
     --green-dark: #43a047;
     --blue-main: #2196F3;
+    --orange-main: #FF9800;
     --red-main: #f44336;
     
     --bg-main: #f0f2f5;
@@ -12,7 +13,6 @@
     --radius-lg: 24px;
     --radius-md: 16px;
 }
-
 body.dark-mode {
     --bg-main: #1a1c1e;
     --glass-bg: rgba(45, 48, 53, 0.85);
@@ -20,7 +20,6 @@ body.dark-mode {
     --text-main: #e1e2e5;
     --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
-
 body {
     margin: 0;
     padding: 0;
@@ -30,7 +29,6 @@ body {
     min-height: 100vh;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
-
 #app {
     max-width: 900px;
     margin: 20px auto;
@@ -43,22 +41,27 @@ body {
     box-shadow: var(--shadow-soft);
     transition: all 0.3s ease;
 }
-
 .app-header {
     text-align: center;
     margin-bottom: 20px;
+    padding: 20px;
+    background: none; /* Гарантирует отсутствие фона */
 }
 
 .app-header h1 {
     margin: 0;
-    font-size: 2em;
+    font-size: 2.2em;
+    /* Используем переменную, чтобы цвет был 1-в-1 как на кнопках */
+    color: var(--green-main); 
+    /* Чистое, аккуратное свечение */
+    text-shadow: 0 0 15px rgba(74, 175, 80, 0.2);
+    font-weight: 800;
 }
-
 .app-subtitle {
     opacity: 0.7;
     margin: 5px 0;
+    color: #e0e0e0;
 }
-
 .menu {
     display: flex;
     flex-wrap: wrap;
@@ -66,10 +69,10 @@ body {
     gap: 10px;
     margin-bottom: 25px;
 }
-
 button {
     background: var(--green-main);
-    color: #fff;
+    color: rgba(0, 0, 0, 0.8);
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
     border: none;
     padding: 12px 22px;
     border-radius: var(--radius-md);
@@ -79,22 +82,18 @@ button {
     transition: all 0.2s ease;
     user-select: none;
 }
-
 button:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
 }
-
 button:active {
     transform: scale(0.95);
 }
-
 button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
 }
-
 .card {
     background: rgba(120, 120, 120, 0.05);
     border: 1px solid var(--glass-border);
@@ -103,18 +102,15 @@ button:disabled {
     margin-bottom: 15px;
     transition: all 0.3s ease;
 }
-
 .card h2,
 .card h3 {
     margin-top: 0;
 }
-
 .theme-wrapper {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 10px;
 }
-
 .test-image {
     width: 100%;
     max-width: 200px;
@@ -123,7 +119,6 @@ button:disabled {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-
 .progress-bar {
     width: 100%;
     background: rgba(0, 0, 0, 0.1);
@@ -132,14 +127,12 @@ button:disabled {
     margin-bottom: 20px;
     overflow: hidden;
 }
-
 .progress-bar-inner {
     height: 100%;
     background: var(--green-main);
     transition: width 0.3s ease;
     border-radius: 4px;
 }
-
 @media (max-width: 600px) {
     #app {
         margin: 0;
@@ -157,11 +150,9 @@ button:disabled {
         font-size: 1.5em;
     }
 }
-
 #content {
     animation: fadeIn 0.3s ease-out;
 }
-
 @keyframes fadeIn {
     from {
         opacity: 0;

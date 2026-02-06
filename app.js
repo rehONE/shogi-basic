@@ -251,7 +251,7 @@ function showTestMenu() {
         </div>
         <div class="menu">
             <button class="test-level-btn" data-level="Легкий" style="background: var(--green-main);">😊 Легкий</button>
-            <button class="test-level-btn" data-level="Средний" style="background: var(--blue-main);">🤔 Средний</button>
+            <button class="test-level-btn" data-level="Средний" style="background: var(--orange-main); color: rgba(0, 0, 0, 0.8); text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);">🤔 Средний</button>
             <button class="test-level-btn" data-level="Сложный" style="background: var(--red-main);">🔥 Сложный</button>
         </div>
     `);
